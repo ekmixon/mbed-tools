@@ -111,7 +111,7 @@ def test_stops_terminal_when_ctrl_c_received(mock_serial, mock_console):
 
     term.writer()
 
-    assert term.alive is False
+    assert not term.alive
 
 
 def test_stops_terminal_on_keyboard_interrupt(mock_serial, mock_console):
@@ -121,7 +121,7 @@ def test_stops_terminal_on_keyboard_interrupt(mock_serial, mock_console):
 
     term.writer()
 
-    assert term.alive is False
+    assert not term.alive
 
 
 @pytest.mark.parametrize("menu_key", terminal.VALID_MENU_KEYS)
@@ -136,7 +136,11 @@ def test_handles_valid_menu_key(menu_key, mock_serial, mock_console):
     term.handle_menu_key.assert_called_once_with(menu_key)
 
 
-INVALID_MENU_KEYS = tuple(set(chr(i) for i in range(0, 127)) - set(terminal.VALID_MENU_KEYS) - set([terminal.CTRL_H]))
+INVALID_MENU_KEYS = tuple(
+    {chr(i) for i in range(127)}
+    - set(terminal.VALID_MENU_KEYS)
+    - {terminal.CTRL_H}
+)
 
 
 @pytest.mark.parametrize("menu_key", INVALID_MENU_KEYS)

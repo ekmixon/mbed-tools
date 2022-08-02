@@ -116,11 +116,11 @@ def _determine_overridden_attributes(targets_in_order: List[dict]) -> Dict[str, 
     target_attributes = _reduce_right_list_of_dictionaries(targets_in_order)
     for merging_attribute in MERGING_ATTRIBUTES:
         override_order_for_single_attribute = [target.get(merging_attribute, {}) for target in targets_in_order]
-        merged_attribute_elements = _reduce_right_list_of_dictionaries(list(override_order_for_single_attribute))
-        if merged_attribute_elements:
+        if merged_attribute_elements := _reduce_right_list_of_dictionaries(
+            list(override_order_for_single_attribute)
+        ):
             target_attributes[merging_attribute] = merged_attribute_elements
-    overridden_attributes = _remove_unwanted_attributes(target_attributes)
-    return overridden_attributes
+    return _remove_unwanted_attributes(target_attributes)
 
 
 def _reduce_right_list_of_dictionaries(list_of_dicts: List[dict]) -> Dict[str, Any]:

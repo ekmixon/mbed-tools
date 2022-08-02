@@ -28,18 +28,30 @@ class TestUtilities(unittest.TestCase):
 
     def test_is_data_object_undefined(self):
         field_number = 30
-        DataObjectType = namedtuple("data_object_example", [f"field{i}" for i in range(0, field_number)])
-        test1 = DataObjectType(*[generate_undefined_values() for i in range(0, field_number)])
+        DataObjectType = namedtuple(
+            "data_object_example", [f"field{i}" for i in range(field_number)]
+        )
+
+        test1 = DataObjectType(
+            *[generate_undefined_values() for i in range(field_number)]
+        )
+
         self.assertTrue(is_undefined_data_object(test1))
-        test2 = DataObjectType(*[generate_valid_values() for i in range(0, field_number)])
+        test2 = DataObjectType(*[generate_valid_values() for i in range(field_number)])
         self.assertFalse(is_undefined_data_object(test2))
 
     def test_to_dict(self):
         field_number = 30
-        DataObjectType = namedtuple("data_object_example", [f"field{i}" for i in range(0, field_number)])
+        DataObjectType = namedtuple(
+            "data_object_example", [f"field{i}" for i in range(field_number)]
+        )
+
         expected_dictionary = {
-            f"field{i}": random.choice([generate_valid_values(), generate_undefined_values()])
-            for i in range(0, field_number)
+            f"field{i}": random.choice(
+                [generate_valid_values(), generate_undefined_values()]
+            )
+            for i in range(field_number)
         }
+
         test = DataObjectType(**expected_dictionary)
         self.assertDictEqual(data_object_to_dict(test), expected_dictionary)

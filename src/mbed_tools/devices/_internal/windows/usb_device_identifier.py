@@ -103,14 +103,12 @@ class Win32DeviceIdParser:
     def record_id_element(self, element: str, valuable_information: dict, patterns_dict: dict) -> None:
         """Stores recognised parts of the device ID based on patterns defined."""
         for k, p in patterns_dict.items():
-            match = p.fullmatch(element)
-            if match:
+            if match := p.fullmatch(element):
                 valuable_information[k] = match.group(1)
 
     def split_id_elements(self, parts: List[str], serial_number: str = None) -> dict:
         """Splits the different elements of an Device ID."""
-        information = dict()
-        information[KEY_UID] = self.parse_uid(parts[-1], serial_number)
+        information = {KEY_UID: self.parse_uid(parts[-1], serial_number)}
         other_elements = parts[-2].split("&")
         patterns_dict = UsbIdentifier.get_patterns_dict()
         for element in other_elements:

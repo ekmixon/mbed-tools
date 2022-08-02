@@ -163,8 +163,7 @@ def _read_product_code(file_contents: str) -> Optional[str]:
             (?:code|auth)=                   # attribute name
             (?P<product_code>[a-fA-F0-9]{4}) # product code
     """
-    match = re.search(regex, file_contents, re.VERBOSE)
-    if match:
+    if match := re.search(regex, file_contents, re.VERBOSE):
         return match["product_code"]
     return None
 
@@ -176,8 +175,7 @@ def _read_online_id(file_contents: str) -> Optional[OnlineId]:
             \/                                  # forward slash in the url
             (?P<slug>[-\w]+)                    # permitted characters in a slug are letters and digits
     """
-    match = re.search(regex, file_contents, re.VERBOSE)
-    if match:
+    if match := re.search(regex, file_contents, re.VERBOSE):
         return OnlineId(target_type=match["target_type"], slug=match["slug"])
     return None
 
@@ -185,8 +183,7 @@ def _read_online_id(file_contents: str) -> Optional[OnlineId]:
 def _read_url_slug(file_contents: str) -> Optional[str]:
     """Returns slug parsed from file contents, None if not found."""
     regex = r"""url=[^"]+\.[^"]+\/(?P<slug>[-\w]+)(\/|[\w.]+)?\""""
-    match = re.search(regex, file_contents, re.VERBOSE)
-    if match:
+    if match := re.search(regex, file_contents, re.VERBOSE):
         return match["slug"]
     return None
 
@@ -194,8 +191,7 @@ def _read_url_slug(file_contents: str) -> Optional[str]:
 def _read_first_details_txt_contents(file_paths: Iterable[pathlib.Path]) -> dict:
     for path in file_paths:
         if _is_details_txt(path):
-            contents = _try_read_file_text(path)
-            if contents:
+            if contents := _try_read_file_text(path):
                 return _read_details_txt(contents)
 
     logger.warning(f"Could not find DETAILS.TXT in {file_paths!r}.")
@@ -228,8 +224,7 @@ def _read_details_txt(file_contents: str) -> dict:
 def _extract_product_code_from_htm(all_files_contents: Iterable[str]) -> Optional[str]:
     """Return first product code found in files contents, None if not found."""
     for contents in all_files_contents:
-        product_code = _read_product_code(contents)
-        if product_code:
+        if product_code := _read_product_code(contents):
             return product_code
     return None
 
@@ -237,8 +232,7 @@ def _extract_product_code_from_htm(all_files_contents: Iterable[str]) -> Optiona
 def _extract_online_id_from_htm(all_files_contents: Iterable[str]) -> Optional[OnlineId]:
     """Return first online ID found in files contents, None if not found."""
     for contents in all_files_contents:
-        online_id = _read_online_id(contents)
-        if online_id:
+        if online_id := _read_online_id(contents):
             return online_id
     return None
 
@@ -247,8 +241,7 @@ def _extract_online_id_jlink_html(file_paths: Iterable[pathlib.Path]) -> Optiona
     """Return online ID found in Board.html, None if not found."""
     contents = _get_board_html_contents(file_paths)
     if contents is not None:
-        slug = _read_url_slug(contents)
-        if slug:
+        if slug := _read_url_slug(contents):
             return OnlineId("jlink", slug)
     return None
 
@@ -258,8 +251,7 @@ def _extract_version_jlink_html(file_paths: Iterable[pathlib.Path]) -> dict:
     interface_data = {}
     contents = _get_segger_html_content(file_paths)
     if contents is not None:
-        segger_version = _read_url_slug(contents)
-        if segger_version:
+        if segger_version := _read_url_slug(contents):
             interface_data["Version"] = segger_version
     return interface_data
 
@@ -280,24 +272,31 @@ def _read_htm_file_contents(all_files: Iterable[pathlib.Path]) -> List[str]:
     htm_files_contents = []
     for file in all_files:
         if _is_htm_file(file):
-            contents = _try_read_file_text(file)
-            if contents:
+            if contents := _try_read_file_text(file):
                 htm_files_contents.append(contents)
     return htm_files_contents
 
 
 def _get_segger_html_content(file_paths: Iterable[pathlib.Path]) -> Optional[str]:
-    for fp in file_paths:
-        if fp.name.lower() == "segger.html":
-            return _try_read_file_text(fp)
-    return None
+    return next(
+        (
+            _try_read_file_text(fp)
+            for fp in file_paths
+            if fp.name.lower() == "segger.html"
+        ),
+        None,
+    )
 
 
 def _get_board_html_contents(file_paths: Iterable[pathlib.Path]) -> Optional[str]:
-    for fp in file_paths:
-        if fp.name.lower() == "board.html":
-            return _try_read_file_text(fp)
-    return None
+    return next(
+        (
+            _try_read_file_text(fp)
+            for fp in file_paths
+            if fp.name.lower() == "board.html"
+        ),
+        None,
+    )
 
 
 def _is_hidden_file(file: pathlib.Path) -> bool:

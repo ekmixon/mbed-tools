@@ -24,8 +24,8 @@ class TestBoards(TestCase):
         mocked_get_board_data.return_value = fake_board_data
 
         boards = Boards.from_online_database()
-        tgts_a = [b for b in boards]
-        tgts_b = [b for b in boards]
+        tgts_a = list(boards)
+        tgts_b = list(boards)
 
         self.assertEqual(tgts_a, tgts_b, "The lists are equal as boards was not exhausted on the first pass.")
 

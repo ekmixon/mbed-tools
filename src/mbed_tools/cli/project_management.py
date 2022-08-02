@@ -87,18 +87,18 @@ def deploy(path: str, force: bool) -> None:
 
 def _print_dependency_table(libs: List) -> None:
     click.echo("The following library dependencies were fetched: \n")
-    table = []
-    for lib in libs:
-        table.append(
-            [
-                lib.reference_file.stem,
-                lib.get_git_reference().repo_url,
-                lib.source_code_path,
-                git_utils.get_default_branch(git_utils.get_repo(lib.source_code_path))
-                if not lib.get_git_reference().ref
-                else lib.get_git_reference().ref,
-            ]
-        )
+    table = [
+        [
+            lib.reference_file.stem,
+            lib.get_git_reference().repo_url,
+            lib.source_code_path,
+            lib.get_git_reference().ref
+            or git_utils.get_default_branch(
+                git_utils.get_repo(lib.source_code_path)
+            ),
+        ]
+        for lib in libs
+    ]
 
     headers = ("Library Name", "Repository URL", "Path", "Git Reference")
     click.echo(tabulate.tabulate(table, headers=headers))

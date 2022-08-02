@@ -76,8 +76,7 @@ def _assemble_config_from_sources(
 
 
 def _get_app_filter_labels(mbed_app_data: dict, config: Config) -> None:
-    requires = mbed_app_data.get("requires")
-    if requires:
+    if requires := mbed_app_data.get("requires"):
         config["requires"] = requires
 
     config.update(_get_file_filter_overrides(mbed_app_data))

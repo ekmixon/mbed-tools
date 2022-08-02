@@ -115,11 +115,13 @@ class LabelFilter:
             allowed_label_values: Values which are allowed for the given label type.
         """
         self._label_type = label_type
-        self._allowed_labels = set(f"{label_type}_{label_value}" for label_value in allowed_label_values)
+        self._allowed_labels = {
+            f"{label_type}_{label_value}" for label_value in allowed_label_values
+        }
 
     def __call__(self, path: Path) -> bool:
         """Return True if given path contains only allowed labels - should not be filtered out."""
-        labels = set(part for part in path.parts if self._label_type in part)
+        labels = {part for part in path.parts if self._label_type in part}
         return labels.issubset(self._allowed_labels)
 
 

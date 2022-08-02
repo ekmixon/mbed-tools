@@ -66,18 +66,18 @@ def _get_devices_ids(devices: Iterable[Device]) -> List[Tuple[Optional[int], Dev
 
 def _build_tabular_output(devices: Iterable[Device]) -> str:
     headers = ["Board name", "Serial number", "Serial port", "Mount point(s)", "Build target(s)", "Interface Version"]
-    devices_data = []
-    for id, device in _get_devices_ids(devices):
-        devices_data.append(
-            [
-                device.mbed_board.board_name or "<unknown>",
-                device.serial_number,
-                device.serial_port or "<unknown>",
-                "\n".join(str(mount_point) for mount_point in device.mount_points),
-                "\n".join(_get_build_targets(device.mbed_board, id)),
-                device.interface_version,
-            ]
-        )
+    devices_data = [
+        [
+            device.mbed_board.board_name or "<unknown>",
+            device.serial_number,
+            device.serial_port or "<unknown>",
+            "\n".join(str(mount_point) for mount_point in device.mount_points),
+            "\n".join(_get_build_targets(device.mbed_board, id)),
+            device.interface_version,
+        ]
+        for id, device in _get_devices_ids(devices)
+    ]
+
     return tabulate(devices_data, headers=headers, numalign="left")
 
 

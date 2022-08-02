@@ -53,8 +53,8 @@ def compare_databases(offline_boards: Boards, online_boards: Boards) -> Database
     """Compare offline and online board databases."""
     added = online_boards - offline_boards
     removed = offline_boards - online_boards
-    added_board_names = set(b.board_name for b in added)
-    removed_board_names = set(b.board_name for b in removed)
+    added_board_names = {b.board_name for b in added}
+    removed_board_names = {b.board_name for b in removed}
     modified_board_names = added_board_names & removed_board_names
     added_board_names -= modified_board_names
     removed_board_names -= modified_board_names

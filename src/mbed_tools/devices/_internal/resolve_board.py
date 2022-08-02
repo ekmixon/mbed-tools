@@ -71,9 +71,7 @@ def resolve_board(
             )
             raise ResolveBoardError() from e
 
-    # Product code might be the first 4 characters of the serial number
-    product_code = serial_number[:4]
-    if product_code:
+    if product_code := serial_number[:4]:
         try:
             return get_board_by_product_code(product_code)
         except UnknownBoard:

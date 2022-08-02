@@ -15,7 +15,7 @@ class TestSystemDataLoader(unittest.TestCase):
         from mbed_tools.devices._internal.windows.system_data_loader import SystemDataLoader, SYSTEM_DATA_TYPES
 
         def mock_system_element_fetcher(arg):
-            return (arg, list())
+            return arg, []
 
         load_all.side_effect = mock_system_element_fetcher
 

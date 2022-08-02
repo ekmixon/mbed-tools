@@ -114,7 +114,7 @@ class TestUsbDeviceId(TestCase):
         self.assertNotEqual(hash(a), hash(b))
         self.assertNotEqual(a, b)
         # Checks dictionary lookup
-        self.assertNotIn(a, dict())
+        self.assertNotIn(a, {})
         self.assertNotIn(a, {b: ""})
         self.assertIn(b, {b: ""})
 

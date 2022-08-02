@@ -33,7 +33,7 @@ class TestWindowsUID(unittest.TestCase):
         self.assertIsNotNone(uid1)
         self.assertNotEqual(uid1, "")
         self.assertFalse(uid1 == "")
-        self.assertFalse(uid1 == dict())
+        self.assertFalse(uid1 == {})
         self.assertEqual(uid1, uid1)
         self.assertTrue(uid1 == uid1)
 
@@ -126,7 +126,7 @@ class TestWindowsUID(unittest.TestCase):
         self.assertIn(uid2, {uid1, uid2})
         # Checks lookup in dictionary
         self.assertIn(uid1, {uid1: "1", uid2: "2"})
-        self.assertNotIn(uid1, dict())
+        self.assertNotIn(uid1, {})
         self.assertNotIn(uid1, {uid2: "1"})
         self.assertEqual({uid1: "1", uid2: "2"}.get(uid1), "1")
         self.assertIsNone({uid2: "2"}.get(uid1))

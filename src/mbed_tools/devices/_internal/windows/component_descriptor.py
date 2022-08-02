@@ -53,7 +53,7 @@ class ComponentDescriptor(ABC):
     @property
     def field_names(self) -> List[str]:
         """Returns the names of all the fields of the descriptor."""
-        return [k for k in getattr(self._win32_definition, NAMED_TUPLE_FIELDS_ATTRIBUTE)]
+        return list(getattr(self._win32_definition, NAMED_TUPLE_FIELDS_ATTRIBUTE))
 
     @property
     @abstractmethod
@@ -106,9 +106,14 @@ class Win32Wrapper:
 
     def _read_cdispatch_fields(self, win32_element: Any, element_fields_list: List[str]) -> dict:
         """Reads all the fields from a cdispatch object returned by pywin32."""
-        if not win32_element:
-            return dict()
-        return {k: self._read_cdispatch_field(win32_element, k) for k in element_fields_list}
+        return (
+            {
+                k: self._read_cdispatch_field(win32_element, k)
+                for k in element_fields_list
+            }
+            if win32_element
+            else {}
+        )
 
     def _read_cdispatch_field(self, win32_element: Any, key: str) -> Any:
         """Reads a specific field on a cdispatch object."""

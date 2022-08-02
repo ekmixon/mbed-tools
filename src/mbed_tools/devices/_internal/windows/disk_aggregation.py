@@ -161,12 +161,12 @@ class SystemDiskInformation:
 
     def _load_data(self) -> None:
         aggregator = WindowsDiskDataAggregator(self._data_loader)
-        disk_data_by_serialnumber: dict = dict()  # The type is enforced so that mypy is happy.
-        disk_data_by_label = dict()
+        disk_data_by_serialnumber: dict = {}
+        disk_data_by_label = {}
         for ld in ComponentsLoader(self._data_loader, LogicalDisk).element_generator():
             aggregation = aggregator.aggregate(cast(LogicalDisk, ld))
             key = aggregation.get("uid").presumed_serial_number
-            disk_data_list = disk_data_by_serialnumber.get(key, list())
+            disk_data_list = disk_data_by_serialnumber.get(key, [])
             disk_data_list.append(aggregation)
             disk_data_by_serialnumber[key] = disk_data_list
             disk_data_by_label[aggregation.get("label")] = aggregation
@@ -178,18 +178,18 @@ class SystemDiskInformation:
         """Gets system's disk data by serial number."""
         if not self._disk_data_by_serial_number:
             self._load_data()
-        return self._disk_data_by_serial_number if self._disk_data_by_serial_number else dict()
+        return self._disk_data_by_serial_number or {}
 
     @property
     def disk_data_by_label(self) -> dict:
         """Gets system's disk data by label."""
         if not self._disk_data_by_label:
             self._load_data()
-        return self._disk_data_by_label if self._disk_data_by_label else dict()
+        return self._disk_data_by_label or {}
 
     def get_disk_information(self, uid: WindowsUID) -> List[AggregatedDiskData]:
         """Gets all disk information for a given UID."""
-        return self.disk_data_by_serial_number.get(uid.presumed_serial_number, list())
+        return self.disk_data_by_serial_number.get(uid.presumed_serial_number, [])
 
     def get_disk_information_by_label(self, label: str) -> AggregatedDiskData:
         """Gets all disk information for a given label."""

@@ -50,8 +50,7 @@ class Boards(Set):
 
     def __iter__(self) -> Iterator["Board"]:
         """Yield an Board on each iteration."""
-        for board in self._boards_data:
-            yield board
+        yield from self._boards_data
 
     def __len__(self) -> int:
         """Return the number of boards."""
@@ -63,10 +62,7 @@ class Boards(Set):
         Args:
             board: An instance of Board.
         """
-        if not isinstance(board, Board):
-            return False
-
-        return any(x == board for x in self)
+        return any(x == board for x in self) if isinstance(board, Board) else False
 
     def get_board(self, matching: Callable) -> Board:
         """Returns first Board for which `matching` returns True.

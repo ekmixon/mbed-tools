@@ -52,7 +52,7 @@ class SystemUsbDeviceInformation:
 
     def _load(self) -> None:
         """Populates the cache."""
-        self._cache = cast(Dict[UsbIdentifier, List[UsbHub]], dict())
+        self._cache = cast(Dict[UsbIdentifier, List[UsbHub]], {})
         self._ids_cache = cast(Set[UsbIdentifier], set())
         controllers = self._list_usb_controller_ids()
         for usb_device in self._iterate_over_hubs():
@@ -61,7 +61,7 @@ class SystemUsbDeviceInformation:
             )
             if usb_id in controllers:
                 continue
-            entry = self._cache.get(usb_id, list())
+            entry = self._cache.get(usb_id, [])
             entry.append(cast(UsbHub, usb_device))
             self._cache[usb_id] = entry
 
@@ -78,7 +78,7 @@ class SystemUsbDeviceInformation:
 
     def get_usb_devices(self, uid: UsbIdentifier) -> List[UsbHub]:
         """Gets all USB devices related to an identifier."""
-        return self.usb_devices.get(uid, list())
+        return self.usb_devices.get(uid, [])
 
     def usb_device_ids(self) -> List[UsbIdentifier]:
         """Gets system usb device IDs."""

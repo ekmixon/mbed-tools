@@ -26,7 +26,7 @@ class TestFlashBinary(TestCase):
             base_dir = pathlib.Path(tmpDir)
             build_dir = base_dir / "cmake_build"
             build_dir.mkdir()
-            bin_file = base_dir.name + ".bin"
+            bin_file = f"{base_dir.name}.bin"
             bin_file = build_dir / bin_file
             bin_file.touch()
             _build_binary_file_path.return_value = bin_file
@@ -43,7 +43,7 @@ class TestBuildBinFilePath(TestCase):
             base_dir = pathlib.Path(tmpDir)
             build_dir = base_dir / "cmake_build"
             build_dir.mkdir()
-            bin_file = base_dir.name + ".bin"
+            bin_file = f"{base_dir.name}.bin"
             bin_file = build_dir / bin_file
             bin_file.touch()
 
@@ -54,7 +54,7 @@ class TestBuildBinFilePath(TestCase):
             base_dir = pathlib.Path(tmpDir)
             build_dir = base_dir / "cmake_build"
             build_dir.mkdir()
-            bin_file = base_dir.name + ".hex"
+            bin_file = f"{base_dir.name}.hex"
             bin_file = build_dir / bin_file
             bin_file.touch()
 
@@ -79,7 +79,7 @@ class TestCopyToDevice(TestCase):
             base_dir = pathlib.Path(tmpDir)
             build_dir = base_dir / "cmake_build"
             build_dir.mkdir()
-            bin_file = base_dir.name + ".bin"
+            bin_file = f"{base_dir.name}.bin"
             bin_file = build_dir / bin_file
             bin_file.touch()
             _flash_dev(test_device.mount_points[0].resolve(), bin_file)

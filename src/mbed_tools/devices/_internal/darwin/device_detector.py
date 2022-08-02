@@ -84,8 +84,7 @@ def _get_mount_points(device_data: system_profiler.USBDevice) -> Tuple[pathlib.P
     storage_identifiers = [media["bsd_name"] for media in device_data.get("Media", []) if "bsd_name" in media]
     mount_points = []
     for storage_identifier in storage_identifiers:
-        mount_point = diskutil.get_mount_point(storage_identifier)
-        if mount_point:
+        if mount_point := diskutil.get_mount_point(storage_identifier):
             mount_points.append(pathlib.Path(mount_point))
         else:
             logging.debug(f"Couldn't determine mount point for device id: {storage_identifier}.")
@@ -105,8 +104,7 @@ def _get_serial_port(device_data: system_profiler.USBDevice) -> Optional[str]:
         return None
 
     ioreg_name = _build_ioreg_device_name(device_name=device_name, location_id=location_id)
-    serial_port = ioreg.get_io_dialin_device(ioreg_name)
-    return serial_port
+    return ioreg.get_io_dialin_device(ioreg_name)
 
 
 def _build_ioreg_device_name(device_name: str, location_id: str) -> str:
@@ -123,8 +121,7 @@ def _build_ioreg_device_name(device_name: str, location_id: str) -> str:
     (?P<location>\d+) # location (i.e.: "123456" in "0x123456 / 2")
     (\s\/\s\d+)?      # suffix of location (" / 14")
     """
-    match = re.match(pattern, location_id, re.VERBOSE)
-    if match:
+    if match := re.match(pattern, location_id, re.VERBOSE):
         return f"{device_name}@{match['location']}"
     else:
         return device_name

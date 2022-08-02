@@ -20,8 +20,8 @@ def make_board(
         board_name=board_name,
         target_type=target_type,
         slug=slug,
-        mbed_os_support=mbed_os_support if mbed_os_support else (),
-        mbed_enabled=mbed_enabled if mbed_enabled else (),
+        mbed_os_support=mbed_os_support or (),
+        mbed_enabled=mbed_enabled or (),
         build_variant=(),
     )
 

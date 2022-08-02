@@ -15,7 +15,7 @@ def build_candidate_data(**overrides):
         "serial_number": "qwer",
         "serial_port": "COM1",
     }
-    return {**defaults, **overrides}
+    return defaults | overrides
 
 
 class TestCandidateDevice(TestCase):

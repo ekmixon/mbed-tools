@@ -31,8 +31,9 @@ class USBDevice(TypedDict, total=False):
 
 def get_all_usb_devices_data() -> List[USBDeviceTree]:
     """Returns parsed output of `system_profiler` call."""
-    output = subprocess.check_output(["system_profiler", "-xml", "SPUSBDataType"], stderr=subprocess.DEVNULL)
-    if output:
+    if output := subprocess.check_output(
+        ["system_profiler", "-xml", "SPUSBDataType"], stderr=subprocess.DEVNULL
+    ):
         return cast(List[USBDeviceTree], plistlib.loads(output))
     return []
 
@@ -41,8 +42,7 @@ def get_end_usb_devices_data() -> List[USBDevice]:
     """Returns only end devices from the output of `system_profiler` call."""
     data = get_all_usb_devices_data()
     leaf_devices = _extract_leaf_devices(data)
-    end_devices = _filter_end_devices(leaf_devices)
-    return end_devices
+    return _filter_end_devices(leaf_devices)
 
 
 def _extract_leaf_devices(data: Iterable[USBDeviceTree]) -> List[USBDevice]:

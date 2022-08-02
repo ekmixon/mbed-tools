@@ -45,7 +45,9 @@ class TestComponentDescriptor(TestCase):
         self.assertTrue(get_test_class()().__class__, "AComponentForTest")
 
     def test_parameters(self):
-        self.assertListEqual([name for name in ComponentDefinition._fields], get_test_class()().field_names)
+        self.assertListEqual(
+            list(ComponentDefinition._fields), get_test_class()().field_names
+        )
 
     def test_set_values(self):
 

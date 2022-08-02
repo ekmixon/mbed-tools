@@ -31,7 +31,7 @@ SYSTEM_DATA_TYPES = [
 
 def load_all(cls: type) -> Tuple[type, List[ComponentDescriptor]]:
     """Loads all elements present in the system referring to a specific type."""
-    return (cls, [element for element in ComponentDescriptorWrapper(cls).element_generator()])
+    return cls, list(ComponentDescriptorWrapper(cls).element_generator())
 
 
 class SystemDataLoader:
@@ -48,7 +48,7 @@ class SystemDataLoader:
         """Loads all system data in parallel."""
         with ThreadPoolExecutor() as executor:
             results = executor.map(load_all, SYSTEM_DATA_TYPES)
-        self._system_data = {k: v for (k, v) in results}
+        self._system_data = dict(results)
 
     @property
     def system_data(self) -> Dict[type, List[ComponentDescriptor]]:
@@ -59,7 +59,7 @@ class SystemDataLoader:
 
     def get_system_data(self, cls: type) -> List[ComponentDescriptor]:
         """Gets the system data for a particular type."""
-        return self.system_data.get(cls, list())
+        return self.system_data.get(cls, [])
 
 
 class ComponentsLoader:
@@ -72,5 +72,4 @@ class ComponentsLoader:
 
     def element_generator(self) -> Generator["ComponentDescriptor", None, None]:
         """Gets a generator over all elements currently registered in the system."""
-        for component in self._data_loader.get_system_data(self._cls):
-            yield component
+        yield from self._data_loader.get_system_data(self._cls)

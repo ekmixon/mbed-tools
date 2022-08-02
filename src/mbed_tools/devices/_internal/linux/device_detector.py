@@ -49,10 +49,14 @@ class LinuxDeviceDetector(DeviceDetector):
 
 def _find_serial_port_for_device(disk_serial_id: str) -> Optional[str]:
     """Try to find a serial port associated with the given device."""
-    for tty_dev in pyudev.Context().list_devices(subsystem="tty"):
-        if tty_dev.properties.get("ID_SERIAL_SHORT") == disk_serial_id:
-            return cast(str, tty_dev.properties.get("DEVNAME"))
-    return None
+    return next(
+        (
+            cast(str, tty_dev.properties.get("DEVNAME"))
+            for tty_dev in pyudev.Context().list_devices(subsystem="tty")
+            if tty_dev.properties.get("ID_SERIAL_SHORT") == disk_serial_id
+        ),
+        None,
+    )
 
 
 def _find_fs_mounts_for_device(device_file_path: str) -> Tuple[Path, ...]:

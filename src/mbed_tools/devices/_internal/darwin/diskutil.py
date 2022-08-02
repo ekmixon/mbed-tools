@@ -21,8 +21,9 @@ class Volume(TypedDict, total=False):
 
 def get_all_external_disks_data() -> List[VolumeTree]:
     """Returns parsed output of `diskutil` call, fetching only information of interest."""
-    output = subprocess.check_output(["diskutil", "list", "-plist", "external"], stderr=subprocess.DEVNULL)
-    if output:
+    if output := subprocess.check_output(
+        ["diskutil", "list", "-plist", "external"], stderr=subprocess.DEVNULL
+    ):
         data: Dict = plistlib.loads(output)
         return data.get("AllDisksAndPartitions", [])
     return []
@@ -41,10 +42,14 @@ def get_all_external_volumes_data() -> List[Volume]:
 def get_external_volume_data(device_identifier: str) -> Optional[Volume]:
     """Returns external volume data for a given identifier."""
     data = get_all_external_volumes_data()
-    for device in data:
-        if device.get("DeviceIdentifier") == device_identifier:
-            return device
-    return None
+    return next(
+        (
+            device
+            for device in data
+            if device.get("DeviceIdentifier") == device_identifier
+        ),
+        None,
+    )
 
 
 def get_mount_point(device_identifier: str) -> Optional[str]:

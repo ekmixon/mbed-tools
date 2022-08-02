@@ -131,10 +131,10 @@ def _extract_config_settings(namespace: str, config_data: dict) -> List[ConfigSe
 def _extract_target_overrides(
     namespace: str, override_data: dict, allowed_target_labels: Iterable[str]
 ) -> List[Override]:
-    valid_target_data = dict()
+    valid_target_data = {}
     for target_type in override_data:
         if target_type == "*" or target_type in allowed_target_labels:
-            valid_target_data.update(override_data[target_type])
+            valid_target_data |= override_data[target_type]
 
     return _extract_overrides(namespace, valid_target_data)
 
@@ -169,7 +169,4 @@ def _sanitise_value(val: Any) -> Any:
     * To take advantage of set operations when we deal with "cumulative" settings.
     * To prevent any duplicate settings ending up in the final config.
     """
-    if isinstance(val, list):
-        return set(flatten_nested(val))
-
-    return val
+    return set(flatten_nested(val)) if isinstance(val, list) else val

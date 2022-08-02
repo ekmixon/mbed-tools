@@ -108,11 +108,10 @@ def build(
     click.echo("Building Mbed project...")
     build_project(build_tree)
 
-    if flash or sterm:
-        if target_id is not None or sterm:
-            devices = [find_connected_device(mbed_target, target_id)]
-        else:
-            devices = find_all_connected_devices(mbed_target)
+    if flash and (target_id is not None or sterm) or not flash and sterm:
+        devices = [find_connected_device(mbed_target, target_id)]
+    elif flash:
+        devices = find_all_connected_devices(mbed_target)
 
     if flash:
         for dev in devices:

@@ -81,11 +81,14 @@ def find_all_connected_devices(target_name: str) -> List[Device]:
     if not connected.identified_devices:
         raise NoDevicesFound("No Mbed enabled devices found.")
 
-    matching_devices = sorted(
-        [device for device in connected.identified_devices if device.mbed_board.board_type == target_name.upper()],
+    if matching_devices := sorted(
+        [
+            device
+            for device in connected.identified_devices
+            if device.mbed_board.board_type == target_name.upper()
+        ],
         key=attrgetter("serial_number"),
-    )
-    if matching_devices:
+    ):
         return matching_devices
 
     detected_targets = "\n".join(

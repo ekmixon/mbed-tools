@@ -46,8 +46,8 @@ def initialise_project(path: pathlib.Path, create_only: bool) -> None:
         path: Path to the project folder. Created if it doesn't exist.
         create_only: Flag which suppreses fetching mbed-os. If the value is `False`, fetch mbed-os from the remote.
     """
-    program = MbedProgram.from_new(path)
     if not create_only:
+        program = MbedProgram.from_new(path)
         libs = LibraryReferences(root=program.root, ignore_paths=["mbed-os"])
         libs.fetch()
 

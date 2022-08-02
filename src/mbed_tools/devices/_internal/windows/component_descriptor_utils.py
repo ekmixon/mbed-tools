@@ -16,13 +16,14 @@ def is_undefined_value(value: Any) -> bool:
 
 def is_undefined_data_object(data_object: NamedTuple) -> bool:
     """Checks whether a data object is considered as undefined or not."""
-    for f in data_object._fields:
-        if not is_undefined_value(getattr(data_object, f)):
-            is_undefined = False
-            break
-    else:
-        is_undefined = True
-    return is_undefined
+    return next(
+        (
+            False
+            for f in data_object._fields
+            if not is_undefined_value(getattr(data_object, f))
+        ),
+        True,
+    )
 
 
 def retain_value_or_default(value: Any) -> Any:

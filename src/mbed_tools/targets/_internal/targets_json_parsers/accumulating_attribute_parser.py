@@ -194,10 +194,16 @@ def _find_nearest_defined_attribute(targets_in_order: List[dict], attribute_name
     Returns:
         A dictionary containing the definition of the requested attribute
     """
-    for target in targets_in_order:
-        if attribute_name in target:
-            return _calculate_attribute_for_target(attribute_name, target, targets_in_order)
-    return {}
+    return next(
+        (
+            _calculate_attribute_for_target(
+                attribute_name, target, targets_in_order
+            )
+            for target in targets_in_order
+            if attribute_name in target
+        ),
+        {},
+    )
 
 
 def _determine_accumulated_attributes(targets_in_order: List[dict]) -> Dict[str, Any]:
@@ -215,5 +221,8 @@ def _determine_accumulated_attributes(targets_in_order: List[dict]) -> Dict[str,
     accumulated_attributes = {}
 
     for attribute_name in ACCUMULATING_ATTRIBUTES:
-        accumulated_attributes.update(_find_nearest_defined_attribute(targets_in_order, attribute_name))
+        accumulated_attributes |= _find_nearest_defined_attribute(
+            targets_in_order, attribute_name
+        )
+
     return accumulated_attributes

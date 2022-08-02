@@ -99,8 +99,7 @@ def _response_error_code_to_str(response: requests.Response) -> str:
 def _get_request() -> requests.Response:
     """Make a GET request to the API, ensuring the correct headers are set."""
     header: Optional[Dict[str, str]] = None
-    mbed_api_auth_token = env.MBED_API_AUTH_TOKEN
-    if mbed_api_auth_token:
+    if mbed_api_auth_token := env.MBED_API_AUTH_TOKEN:
         header = {"Authorization": f"Bearer {mbed_api_auth_token}"}
 
     try:

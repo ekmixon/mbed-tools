@@ -37,7 +37,7 @@ def sterm(port: str, baudrate: int, echo: str, mbed_target: str) -> None:
     if port is None:
         port = _find_target_serial_port_or_default(mbed_target)
 
-    terminal.run(port, baudrate, echo=True if echo == "on" else False)
+    terminal.run(port, baudrate, echo=echo == "on")
 
 
 def _get_connected_mbed_devices() -> Any:

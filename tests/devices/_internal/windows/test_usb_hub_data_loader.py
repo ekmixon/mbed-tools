@@ -101,6 +101,8 @@ def generate_mocked_system_usb_device_information():
         def _load(self):
             pass
 
+
+
     class MockedSystemUsbDeviceInformation(SystemUsbDeviceInformation):
         def __init__(self):
             super().__init__(MockedDataLoader())
@@ -109,14 +111,14 @@ def generate_mocked_system_usb_device_information():
             return controllers
 
         def _iterate_over_hubs(self):
-            hubs = [UsbHub() for _ in range(0, len(usb_hubs))]
+            hubs = [UsbHub() for _ in range(len(usb_hubs))]
             for i, hub in enumerate(usb_hubs):
                 hubs[i].set_data_values(hub)
-            for h in hubs:
-                yield h
+            yield from hubs
 
         def _determine_potential_serial_number(self, usb_device):
             return MOCKED_SERIAL_NUMBER_DATA.get(usb_device.pnp_id)
+
 
     return MockedSystemUsbDeviceInformation()
 
